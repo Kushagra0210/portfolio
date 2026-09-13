@@ -1,0 +1,52 @@
+## The problem
+
+RTO services are not a single form. They are long-running workflows involving identity, eligibility, documents, payments, appointments, status changes and recovery when something goes wrong. RaahSathi explores how that complexity can become a clearer bilingual product journey.
+
+<ProjectScreenshot src="/projects/raahsathi.png" alt="RaahSathi services page" caption="The bilingual service catalogue groups complex government workflows into clear entry points." />
+
+## Architecture
+
+RaahSathi is collaborative work. The application uses Next.js for the product surface and server layer, Prisma with PostgreSQL for durable workflow state, and validation and test tooling around service boundaries.
+
+<ArchitectureDiagram title="A durable service application" nodes={[
+  { label: "Bilingual UI", detail: "Service discovery, applications and reviewer-friendly status" },
+  { label: "Auth + identity", detail: "Sessions, account context and identity recovery" },
+  { label: "Workflow services", detail: "Applications, payments, appointments and waitlists" },
+  { label: "OpenAPI boundary", detail: "Documented contracts and validated payloads" },
+  { label: "PostgreSQL", detail: "Durable application and service state through Prisma" },
+]} />
+
+## My contribution
+
+I do not claim the whole repository. Git history attributes **13 commits** to me in the current project history. My work covers authentication and sessions, durable application workflows, identity recovery and licence context, payment convergence, RTO appointments, waitlists, bilingual journey UI, OpenAPI contracts, database changes, backend hardening and focused tests.
+
+<Callout label="Attribution">RaahSathi originated as team work and the repository preserves its fork and contributor history. This case study describes only the surfaces I can support with commit history.</Callout>
+
+## Key decisions
+
+<DecisionGrid items={[
+  { decision: "Persist workflow state early", why: "Applications should survive refreshes and partial journeys; browser state is not a system of record." },
+  { decision: "Unify payment outcomes", why: "Success, failure and retry paths converge on explicit application state instead of scattered UI flags." },
+  { decision: "Recovery is part of identity", why: "Account and licence recovery are first-class workflows because public-service journeys must expect incomplete information." },
+  { decision: "Language belongs in the journey", why: "The bilingual surface is structured into the service flow rather than added as a decorative translation toggle." },
+]} />
+
+## Implementation details
+
+My changes span server and client boundaries: session handling, Prisma-backed application state, API validation, appointment and waitlist behavior, payment state, responsive navigation and reviewer-oriented interface states. That breadth mattered because failures in one layer surface as confusion in another.
+
+## Testing
+
+The repository uses Vitest for focused logic and service tests and Playwright for browser-level flows. I added tests around backend behavior and workflow hardening, especially where a retry or recovery path could corrupt state.
+
+## Limitations
+
+- This is a product prototype, not an official government service.
+- Payment behavior is an application workflow demonstration, not a production financial integration.
+- Service rules and document requirements need jurisdiction-specific verification before real-world use.
+
+## Status
+
+The service catalogue is deployed. The strongest next step would be a seeded reviewer account and a documented end-to-end demo path for one representative service.
+
+<CaseLinks repository="https://github.com/Kushagra0210/RaahSathi" live="https://raahsathi-six.vercel.app/services" />

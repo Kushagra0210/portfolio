@@ -1,0 +1,52 @@
+## The problem
+
+Solving a problem once is not the same as retaining the pattern. Notes and bookmarks record what happened, but they do not answer the operational question: **what should I revise today?** I built this as a personal system for converting solved questions into a clear, repeatable queue.
+
+<ProjectScreenshot src="/projects/dsa-tracker.png" alt="Login page for DSA Revision Tracker" caption="The public entry point. Product data stays behind an authenticated session." />
+
+## Architecture
+
+The repository is a single Next.js application, but the boundaries are deliberate: server-rendered routes expose the product, server actions and route handlers own mutations, domain services calculate revision state, and PostgreSQL holds the durable record.
+
+<ArchitectureDiagram title="A mutation path with explicit boundaries" nodes={[
+  { label: "App Router UI", detail: "Dashboard, recall, library, calendar and settings" },
+  { label: "Server boundary", detail: "Auth checks, Zod validation and request orchestration" },
+  { label: "Revision domain", detail: "Schedules +3, +7, +15, +21, +60 and +90 days" },
+  { label: "Prisma 7", detail: "Typed persistence and user-scoped queries" },
+  { label: "PostgreSQL", detail: "Problems, attempts, schedules and preferences" },
+]} />
+
+## Ownership
+
+This is a solo project. I own the product rules, schema, authentication, implementation, interface and tests. That makes it the clearest example of how I make trade-offs when there is no hand-off boundary to hide behind.
+
+## Key decisions
+
+<DecisionGrid items={[
+  { decision: "Revision state is computed, not guessed", why: "Intervals and attempt history produce the next due date, keeping the queue deterministic and testable." },
+  { decision: "Timezones are domain data", why: "A revision due 'today' must mean the user's day. Luxon and stored timezone preferences avoid server-local date drift." },
+  { decision: "Authorization lives beside data access", why: "Every user-scoped mutation checks the session and ownership before reading or changing a problem." },
+  { decision: "Server-first mutation flow", why: "Server Actions and route handlers keep credentials and database logic off the client while still producing a fast interface." },
+]} />
+
+## Implementation details
+
+The product includes an active-recall flow, overdue queue, searchable library, calendar, configurable intervals, streaks and keyboard shortcuts. Form input is validated before reaching the database. The schema separates a problem from its revision attempts so history remains useful when a schedule changes.
+
+<Callout label="Backend signal">The interesting part is not the dashboard count. It is the invariant behind it: the same attempt history should produce the same due queue regardless of where the request runs.</Callout>
+
+## Testing
+
+Vitest covers scheduling and date behavior at the domain layer. Database integration tests exercise persistence and user isolation. These tests focus on expensive failure modes—incorrect due dates, cross-user access and mutation state—rather than treating component snapshots as proof of correctness.
+
+## Limitations
+
+- The interval model is fixed-step, not a learned retention model.
+- Importing problem history from coding platforms is not automated.
+- The deployed entry point requires an account, so recruiters cannot inspect private product data anonymously.
+
+## Status
+
+The application is live and actively usable. Next improvements are an onboarding sample workspace, data export and a richer review-quality signal without turning the system into a gamified leaderboard.
+
+<CaseLinks repository="https://github.com/Kushagra0210/dsa-revision-tracker" live="https://dsa-revision-tracker-five.vercel.app/" />

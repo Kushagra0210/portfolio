@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kushagra Saxena — portfolio
 
-## Getting Started
+A recruiter-first technical portfolio for a backend-focused software engineer. The site pairs concise evidence with detailed, attribution-aware case studies.
 
-First, run the development server:
+## Highlights
+
+- Warm monochrome editorial system with a restrained cobalt accent
+- Keyboard command palette (`Ctrl/⌘ + K`), persisted system-aware theme, reduced-motion support, and semantic navigation
+- MDX case studies for DSA Revision Tracker, RaahSathi, and AQI Predictor
+- Daily server-side GitHub and LeetCode activity refresh with checked-in fallback snapshots
+- Code-native architecture diagrams, verified project screenshots, canonical metadata, sitemap, robots, and structured data
+- Unit/content tests and Playwright coverage for routes, palette, theme, copy-email, activity cells, and mobile project cards
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Quality checks:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run typecheck
+npm run lint
+npm run test
+npm run build
+npm run test:e2e
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Content policy
 
-## Learn More
+Public claims are tied to repository history, live deployments, or the supplied resume. Collaborative projects are labeled explicitly, and GitHub and LeetCode metrics remain platform-specific.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The production site intentionally launches without a resume button until the updated PDF is supplied. The monogram is a preview placeholder for the final editorial portrait.

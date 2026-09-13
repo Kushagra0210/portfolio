@@ -1,0 +1,51 @@
+## The problem
+
+Air-quality datasets are approachable enough to learn from and messy enough to punish shortcuts. This independent project turns a city-level historical dataset into an exploratory application for comparing regression approaches and inspecting a prediction—not a production forecasting claim.
+
+<ProjectScreenshot src="/projects/aqi-predictor.svg" alt="AQI Predictor data and model pipeline" caption="A code-native view of the deployed application pipeline." />
+
+## Architecture
+
+The app keeps the workflow compact: load and validate the dataset, prepare features, train cached model pipelines and expose comparison and prediction views through Streamlit.
+
+<ArchitectureDiagram title="A reproducible experiment loop" nodes={[
+  { label: "Dataset loader", detail: "Pinned source, local cache and explicit failure states" },
+  { label: "Feature pipeline", detail: "Cleaning, selected pollutants and train/test split" },
+  { label: "Model layer", detail: "Linear, tree, forest and gradient-boosted regressors" },
+  { label: "Cached artifacts", detail: "Training work reused across Streamlit reruns" },
+  { label: "Streamlit UI", detail: "Explore, compare, predict and read limitations" },
+]} />
+
+## Ownership
+
+This is an independent applied-ML project. It is not presented as internship work and carries no DRDO branding. I own the data preparation, experiments, Streamlit interface and deployment hardening.
+
+## Key decisions
+
+<DecisionGrid items={[
+  { decision: "Compare baselines before celebrating", why: "Linear regression, decision trees, random forests and XGBoost make model behavior relative rather than presenting one score without context." },
+  { decision: "Cache expensive training", why: "Streamlit reruns frequently; cached resources keep interaction usable without pretending training is free." },
+  { decision: "Fail visibly", why: "Dataset download, schema and training errors are surfaced with recovery guidance instead of producing a broken empty dashboard." },
+  { decision: "Describe prediction honestly", why: "The output is an educational estimate from historical features, not a live AQI forecast or public-health recommendation." },
+]} />
+
+## Implementation details
+
+The application uses pandas for tabular preparation, scikit-learn pipelines for repeatable transforms and estimators, XGBoost as an additional ensemble comparison, and Streamlit for exploratory controls and charts. Dependencies are pinned for a reproducible Community Cloud build.
+
+## Testing
+
+Deployment hardening checks dataset loading, required columns, model preparation and a minimal prediction path. The UI also has explicit loading and error states so infrastructure failure is distinguishable from an empty result.
+
+## Limitations
+
+- The historical city-day dataset is not a live sensor feed.
+- Random splitting can overstate generalization when temporal drift matters.
+- No accuracy or public-health impact claim is made until a documented evaluation protocol supports it.
+- Missing pollution and weather context constrains real-world forecasting value.
+
+## Status
+
+The repository is being prepared for Streamlit Community Cloud. The Live Demo action remains disabled until the deployment is reachable; the repository stays available for inspection.
+
+<CaseLinks repository="https://github.com/Kushagra0210/aqi-predictor" />
