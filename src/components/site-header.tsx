@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CommandMenu, CommandTrigger } from "@/components/command-menu";
+import { CommandShell } from "@/components/command-shell";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export function SiteHeader() {
@@ -13,9 +13,8 @@ export function SiteHeader() {
         <nav className="desktop-nav" aria-label="Primary navigation">
           <Link href="/#work">Work</Link><Link href="/#activity">Activity</Link><Link href="/#experience">Experience</Link>
         </nav>
-        <div className="header-actions"><CommandTrigger /><ThemeToggle /></div>
+        <div className="header-actions"><CommandShell /><ThemeToggle /></div>
       </div>
-      <CommandMenu />
     </header>
   );
 }

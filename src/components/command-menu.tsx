@@ -3,7 +3,7 @@
 import { Command } from "cmdk";
 import { ArrowUpRight, Check, Clipboard, Code2, Home, Keyboard, Mail, Moon, Search, Sun, UserRound } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { profile } from "@/data/projects";
 import type { CommandAction } from "@/types/portfolio";
 
@@ -33,26 +33,9 @@ const actionIcons: Record<string, React.ReactNode> = {
   theme: <Moon aria-hidden="true" />,
 };
 
-export function CommandMenu() {
-  const [open, setOpen] = useState(false);
+export function CommandMenu({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [copied, setCopied] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
-
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        setOpen((value) => !value);
-      }
-    };
-    const onOpen = () => setOpen(true);
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("open-command-menu", onOpen);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("open-command-menu", onOpen);
-    };
-  }, []);
 
   const themeLabel = useMemo(() => resolvedTheme === "dark" ? "Use light theme" : "Use dark theme", [resolvedTheme]);
 
@@ -65,7 +48,7 @@ export function CommandMenu() {
     }
     if (action.kind === "theme") {
       setTheme(resolvedTheme === "dark" ? "light" : "dark");
-      setOpen(false);
+      onOpenChange(false);
       return;
     }
     if (action.href) {
@@ -74,12 +57,12 @@ export function CommandMenu() {
       } else {
         window.location.assign(action.href);
       }
-      setOpen(false);
+      onOpenChange(false);
     }
   }
 
   return (
-    <Command.Dialog open={open} onOpenChange={setOpen} label="Site command palette" className="command-dialog">
+    <Command.Dialog open={open} onOpenChange={onOpenChange} label="Site command palette" className="command-dialog">
       <div className="command-input-wrap">
         <Search size={16} aria-hidden="true" />
         <Command.Input autoFocus placeholder="Type a command or search…" className="command-input" />
@@ -107,13 +90,5 @@ export function CommandMenu() {
       </Command.List>
       <div className="command-footer"><span>↑↓ Navigate</span><span>↵ Select</span></div>
     </Command.Dialog>
-  );
-}
-
-export function CommandTrigger() {
-  return (
-    <button className="command-trigger" type="button" onClick={() => window.dispatchEvent(new Event("open-command-menu"))} aria-label="Open command palette">
-      <Search size={14} aria-hidden="true" /><span>Quick find</span><kbd>⌘K</kbd>
-    </button>
   );
 }
