@@ -37,8 +37,8 @@ test("copy email and activity tooltips work", async ({ page, context }) => {
   await page.getByRole("button", { name: "Copy email" }).click();
   await expect(page.getByRole("button", { name: "Copied" })).toBeVisible();
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe("kushagrasaxena0210@gmail.com");
-  const activityCell = page.locator(".activity-card.github .heatmap span[title]").first();
-  await expect(activityCell).toHaveAttribute("title", /contributions/);
+  const activityCell = page.locator(".activity-card.github .heatmap .active-day title").first();
+  await expect(activityCell).toContainText("contributions");
 });
 
 test("project cards remain usable on mobile", async ({ page }) => {
