@@ -1,5 +1,5 @@
 import { writeFile } from "node:fs/promises";
-import lighthouse from "lighthouse";
+import lighthouse, { desktopConfig } from "lighthouse";
 
 const url = process.argv[2] ?? "http://127.0.0.1:3100";
 const result = await lighthouse(url, {
@@ -7,10 +7,11 @@ const result = await lighthouse(url, {
   output: "json",
   logLevel: "error",
   onlyCategories: ["performance", "accessibility", "best-practices", "seo"],
-});
+}, desktopConfig);
 
 if (!result) throw new Error("Lighthouse did not return a result");
-await writeFile(".next/lighthouse-home.json", result.report);
+const reportName = url.includes("/work/") ? "case-study" : "home";
+await writeFile(`.next/lighthouse-${reportName}.json`, result.report);
 
 const scores = Object.fromEntries(Object.entries(result.lhr.categories).map(([key, category]) => [key, Math.round((category.score ?? 0) * 100)]));
 console.log(JSON.stringify(scores));
